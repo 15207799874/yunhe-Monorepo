@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // 方案1：调试ts-node（开发热更新，推荐日常开发）
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Nest TS-Node Debug",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [               
+                "run",
+                "debug:server"
+            ],
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        // 方案2：调试打包后的dist JS（模拟生产）
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Nest Dist Debug",
+            "program": "${workspaceFolder}/dist/main.js",
+            "console": "integratedTerminal",
+            "sourceMaps": true,
+            "cwd": "${workspaceFolder}"
+        },
+        // 方案3：附加调试（先手动启动服务，再挂载断点）
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach Nest Process",
+            "port": 9229,
+            "address": "localhost",
+            "sourceMaps": true,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "."
+        }
+    ]
+}

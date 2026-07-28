@@ -1,0 +1,157 @@
+<template>
+  <div class="app-content">
+    <ProSearch :items="items" v-model="queryParams" @query="handleQuery" @reset="resetQuery" v-permissions="['system:role:query']"></ProSearch>
+
+    <div class="mb-16px">
+      <el-button plain type="primary" @click="handleCreate" v-permissions="['system:role:create']">
+        <template #icon> <SvgIcon name="Plus" /> </template>
+        <span>新增</span>
+      </el-button>
+      <el-button plain type="danger" @click="handleDelete()" :disabled="!isMultiple" v-permissions="['system:role:delete']">
+        <template #icon> <SvgIcon name="Delete" /> </template>
+        <span>批量删除</span>
+      </el-button>
+    </div>
+
+    <ProTable ref="tableRef" v-loading="loading" :data="list" :columns="columns" @selection-change="handleSelectionChange">
+      <template #status="{ row }">
+        <el-switch size="small" v-model="row.status" inline-prompt active-value="1" inactive-value="0" @click="handleChangeStatus(row)" v-permissions="['system:role:update']" />
+      </template>
+      <template #action="{ row }">
+        <template v-if="row.roleCode !== 'admin'">
+          <el-link type="primary" @click="handleEdit(row)" v-permissions="['system:role:update']">修改</el-link>
+          <el-link type="primary" @click="handleDelete(row)" v-permissions="['system:role:delete']">删除</el-link>
+          <el-link type="primary" @click="handleAuth(row)" v-permissions="['system:role:update']">授权</el-link>
+        </template>
+      </template>
+    </ProTable>
+
+    <ProPagination :total v-model:page="queryParams.pageNo" v-model:limit="queryParams.pageSize" @pagination="getList" />
+
+    <!-- 角色新增/修改对话框 -->
+    <RoleDialog ref="roleDialogRef" @getList="getList" />
+    <!-- 角色权限分配抽屉 -->
+    <AuthPermission ref="authPermissionRef" @getList="getList" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { TipModal } from '@/utils'
+import RoleDialog from './components/RoleDialog.vue'
+import { RoleRequest } from '@/api/system/role.request'
+import AuthPermission from './components/AuthPermission.vue'
+import type { RoleEntity, RoleQueryParams, ProSearchItem, ProTableColumn } from '@/types'
+
+const { sys_normal_disable } = useDict('sys_normal_disable')
+
+const list = ref<RoleEntity[]>([])
+const multipleSelection = ref<RoleEntity[]>([])
+const total = ref<number>(0)
+const loading = ref<boolean>(true)
+const isMultiple = computed(() => multipleSelection.value.length > 0)
+const tableRef = useTemplateRef('tableRef')
+const queryParams = ref<RoleQueryParams>({ pageNo: 1, pageSize: 10 })
+const roleDialogRef = useTemplateRef('roleDialogRef')
+const authPermissionRef = useTemplateRef('authPermissionRef')
+
+const items: ProSearchItem[] = [
+  { prop: 'roleCode', label: '角色编码', type: 'input' },
+  { prop: 'roleName', label: '角色名称', type: 'input' },
+  { prop: 'status', label: '角色状态', type: 'select', options: sys_normal_disable },
+]
+const columns: ProTableColumn<RoleEntity>[] = [
+  { align: 'center', type: 'selection' },
+  { align: 'center', type: 'index', label: '序号', width: 64 },
+  { align: 'center', prop: 'roleCode', label: '角色编码', showOverflowTooltip: true, minWidth: 100 },
+  { align: 'center', prop: 'roleName', label: '角色名称', showOverflowTooltip: true, minWidth: 120 },
+  // { align: 'center', prop: 'roleSort', label: '排序', width: 80 },
+  { align: 'center', prop: 'status', label: '状态', slot: 'status', width: 80 },
+  { align: 'center', prop: 'remark', label: '备注', showOverflowTooltip: true, minWidth: 120 },
+  { align: 'center', prop: 'createTime', label: '创建时间', width: 170 },
+  { align: 'center', slot: 'action', label: '操作', fixed: 'right', width: 132 },
+]
+
+async function getList() {
+  try {
+    loading.value = true
+    const data = await RoleRequest.findList(queryParams.value)
+    list.value = data.records
+    total.value = data.total
+  } catch (error) {
+    console.error('RoleRequest findList error:', error)
+    return Promise.reject(error)
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleSelectionChange(row: RoleEntity[]) {
+  multipleSelection.value = row
+}
+
+function handleAuth(role: RoleEntity) {
+  authPermissionRef.value?.handleOpen(role.id)
+}
+
+function handleQuery() {
+  if (loading.value) return TipModal.msgWarning('正在查询中，请勿重复操作')
+  queryParams.value.pageNo = 1
+  multipleSelection.value = []
+  tableRef.value?.clearSelection()
+  getList()
+}
+
+function resetQuery() {
+  handleQuery()
+}
+
+function handleCreate() {
+  roleDialogRef.value?.open()
+}
+
+function handleEdit(row: RoleEntity) {
+  roleDialogRef.value?.open(row)
+}
+
+async function handleChangeStatus(row: RoleEntity) {
+  try {
+    const actionText = row.status === '1' ? '启用' : '停用'
+    const { cancel } = await TipModal.confirm(`确认要${actionText}${row.roleName}角色吗？`)
+    if (cancel) throw new Error('cancel')
+    await RoleRequest.changeStatus({ id: row.id, status: row.status })
+    TipModal.msgSuccess(`${actionText}成功`)
+    await getList()
+  } catch (error: any) {
+    row.status = row.status === '0' ? '1' : '0'
+    if (error.message === 'cancel') return TipModal.msg('操作取消')
+    return Promise.reject(error)
+  }
+}
+
+async function handleDelete(row?: RoleEntity) {
+  try {
+    const { cancel } = await TipModal.confirm('确定要删除选中的数据吗？')
+    if (cancel) return TipModal.msg('操作取消')
+    const ids = row ? row.id : multipleSelection.value.map((item) => item.id).join(',')
+    await RoleRequest.delete({ ids })
+    if (list.value.length <= 1) {
+      queryParams.value.pageNo = queryParams.value.pageNo > 1 ? queryParams.value.pageNo - 1 : 1
+    }
+    await getList()
+    TipModal.msgSuccess('删除成功')
+    if (!row) {
+      multipleSelection.value = []
+      tableRef.value?.clearSelection()
+    }
+  } catch (error) {
+    console.error('RoleRequest delete error:', error)
+    return Promise.reject(error)
+  }
+}
+
+onMounted(() => {
+  getList()
+})
+</script>
+
+<style lang="scss" scoped></style>
