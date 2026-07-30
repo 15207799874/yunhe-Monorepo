@@ -22,12 +22,12 @@ export class DictDataEntity extends BaseEntity {
   @Column({ name: 'list_class', length: '100', default: null, comment: '表格回显样式' })
   listClass: string
 
-  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'char', length: 1 })
+  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'varchar', length: 1 })
   status: string
 
   @Column({ comment: '备注', nullable: true })
   remark: string
 
-  @Column({ name: 'dict_type_id', nullable: false, type: 'varchar', length: 36, charset: 'utf8mb4', collation: 'utf8mb4_0900_ai_ci' })
+  @Column({ name: 'dict_type_id', nullable: false, type: 'varchar', length: 36, charset: 'utf8mb4', collation: 'BINARY' })
   dictTypeId: string
 }

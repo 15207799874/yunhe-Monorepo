@@ -16,7 +16,7 @@ export class MenuEntity extends BaseEntity {
   @Column({ comment: '组件路径', default: null })
   component: string
 
-  @Column({ comment: '类型（M目录 C菜单 F按钮）', default: 'M', type: 'char', name: 'menu_type' })
+  @Column({ comment: '类型（M目录 C菜单 F按钮）', default: 'M', type: 'varchar', name: 'menu_type' })
   menuType: string
 
   @Column({ comment: '菜单图标', default: null, length: 16 })
@@ -25,13 +25,13 @@ export class MenuEntity extends BaseEntity {
   @Column({ name: 'menu_name', comment: '菜单名称', default: null })
   menuName: string
 
-  @Column({ comment: '菜单是否可见', default: CommonConstant.STATUS_NORMAL, type: 'char' })
+  @Column({ comment: '菜单是否可见', default: CommonConstant.STATUS_NORMAL, type: 'varchar' })
   visible: string
 
   @Column({ comment: '权限字符', default: null })
   permission: string
 
-  @Column({ type: 'char', comment: '数据状态', default: CommonConstant.STATUS_NORMAL })
+  @Column({ type: 'varchar', comment: '数据状态', default: CommonConstant.STATUS_NORMAL })
   status: string
 
   @Column({ comment: '显示顺序', type: 'int', default: 1, name: 'menu_sort' })
@@ -40,7 +40,7 @@ export class MenuEntity extends BaseEntity {
   @Column({ length: 200, comment: '备注', type: 'varchar', nullable: true })
   remark: string
 
-  @Column({ comment: '是否缓存组件', default: CommonConstant.STATUS_DISABLE, type: 'char', name: 'is_cache' })
+  @Column({ comment: '是否缓存组件', default: CommonConstant.STATUS_DISABLE, type: 'varchar', name: 'is_cache' })
   isCache: string
 
   @ManyToMany(() => RoleEntity, (role) => role.menus, { onDelete: 'CASCADE' })

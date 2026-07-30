@@ -21,7 +21,7 @@ export class RoleEntity extends BaseEntity {
   @Column({ name: 'role_sort', comment: '角色排序', type: 'int', default: 1 })
   roleSort: number
 
-  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'char' })
+  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'varchar' })
   status: string
 
   @Column({ length: 200, comment: '备注', type: 'varchar', nullable: true })

@@ -40,11 +40,11 @@ export class OperLogEntity {
   location: string
 
   @Excel({ name: '操作类型', dictType: 'sys_oper_type' })
-  @Column({ comment: '操作类型', type: 'char', default: BusinessType.OTHER })
+  @Column({ comment: '操作类型', type: 'varchar', default: BusinessType.OTHER })
   businessType: BusinessType
 
   @Excel({ name: '操作状态', dictType: 'sys_common_status' })
-  @Column({ comment: '操作状态', type: 'char', default: CommonConstant.STATUS_NORMAL })
+  @Column({ comment: '操作状态', type: 'varchar', default: CommonConstant.STATUS_NORMAL })
   status: string
 
   @Excel({ name: '请求时间', width: 25 })

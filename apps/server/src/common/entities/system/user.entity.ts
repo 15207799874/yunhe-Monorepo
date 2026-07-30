@@ -23,10 +23,10 @@ export class UserEntity extends BaseEntity {
   @Column({ length: 50, comment: '邮箱', nullable: true, type: 'varchar' })
   email: string
 
-  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'char' })
+  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'varchar' })
   status: string
 
-  @Column({ type: 'char', length: '1', comment: '性别', default: '2' })
+  @Column({ type: 'varchar', length: '1', comment: '性别', default: '2' })
   gender: string
 
   @Column({ comment: '年龄', nullable: true, type: 'int' })

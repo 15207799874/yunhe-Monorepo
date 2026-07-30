@@ -23,7 +23,7 @@ export class JobLogEntity {
   jobMessage: string
 
   @Excel({ name: '状态', dictType: 'sys_common_status' })
-  @Column({ name: 'status', comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'char', length: 1 })
+  @Column({ name: 'status', comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'varchar', length: 1 })
   status: string
 
   @Excel({ name: '创建时间', width: 25 })

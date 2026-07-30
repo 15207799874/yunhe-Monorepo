@@ -18,7 +18,7 @@ export class JobEntity extends BaseEntity {
   misfirePolicy: string
 
   /* 是否并发执行（1允许 0禁止） */
-  @Column({ comment: '是否并发执行', default: CommonConstant.STATUS_DISABLE, type: 'char', length: 1 })
+  @Column({ comment: '是否并发执行', default: CommonConstant.STATUS_DISABLE, type: 'varchar', length: 1 })
   concurrent: string
 
   @Column({ name: 'invoke_target', comment: '调用目标字符串', default: null, length: 225 })
@@ -27,6 +27,6 @@ export class JobEntity extends BaseEntity {
   @Column({ name: 'cron_expression', comment: 'cron执行表达式', default: null, length: 225 })
   cronExpression: string
 
-  @Column({ name: 'status', comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'char', length: 1 })
+  @Column({ name: 'status', comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'varchar', length: 1 })
   status: string
 }

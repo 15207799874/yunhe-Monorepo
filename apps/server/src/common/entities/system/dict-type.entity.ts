@@ -13,7 +13,7 @@ export class DictTypeEntity extends BaseEntity {
   @Column({ unique: true, name: 'dict_type', length: 20, nullable: false, type: 'varchar' })
   dictType: string
 
-  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'char', length: 1 })
+  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'varchar', length: 1 })
   status: string
 
   @Column({ comment: '备注', nullable: true, type: 'varchar', length: 200 })

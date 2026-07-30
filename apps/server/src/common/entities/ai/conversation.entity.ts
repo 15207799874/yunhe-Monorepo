@@ -16,7 +16,7 @@ export class AiConversationEntity extends BaseEntity {
   // @Column({ name: 'model', type: 'varchar', length: 50, comment: 'AI模型' })
   // model: string
 
-  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'char', length: 1 })
+  @Column({ default: CommonConstant.STATUS_NORMAL, type: 'varchar', length: 1 })
   status: string
 
   @Column({ nullable: true, type: 'text', comment: '历史对话摘要' })

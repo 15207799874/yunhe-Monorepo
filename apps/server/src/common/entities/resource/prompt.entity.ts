@@ -13,7 +13,7 @@ export class PromptEntity extends BaseEntity {
   @Column({ comment: '提示词类型', default: null, type: 'varchar', length: 50 })
   type: string
 
-  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'char' })
+  @Column({ length: 1, comment: '状态', default: CommonConstant.STATUS_NORMAL, type: 'varchar' })
   status: string
 
   @Column({ comment: '备注', nullable: true, type: 'varchar', length: 500 })

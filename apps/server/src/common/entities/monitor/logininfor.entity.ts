@@ -28,7 +28,7 @@ export class LogininforEntity {
   os: string
 
   @Excel({ name: '登录状态', dictType: 'sys_common_status' })
-  @Column({ comment: '登录状态', length: 1, type: 'char', default: CommonConstant.STATUS_NORMAL })
+  @Column({ comment: '登录状态', length: 1, type: 'varchar', default: CommonConstant.STATUS_NORMAL })
   status: string
 
   @Excel({ name: '提示消息', width: 32 })
