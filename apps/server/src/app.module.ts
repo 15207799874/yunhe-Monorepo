@@ -1,6 +1,7 @@
 import { SharedModule } from './shared/shared.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
+import { DevtoolsModule } from '@nestjs/devtools-integration'
 import { configuration } from '@/utils'
 import { SystemModule } from './modules/system/system.module'
 import { MonitorModule } from './modules/monitor/monitor.module'
@@ -17,6 +18,11 @@ import { ResourceModule } from './modules/resource/resource.module'
 
 @Module({
   imports: [
+    // DevtoolsModule.register({
+    //   http: process.env.NODE_ENV !== 'production',
+    //   // 可选配置
+    //   port: 8001, // Devtools通信端口，默认8001，冲突可改     
+    // }),
     ConfigModule.forRoot({ load: [configuration], ignoreEnvFile: false, isGlobal: true, cache: true }), // 加载配置文件
     DatabaseModule, // 数据库模块
     TokenModule, // 令牌模块

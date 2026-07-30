@@ -11,7 +11,11 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 
 async function bootstrap() {
   // 创建 NestJS 应用实例，传入根模块 AppModule，NestFactory.create() 会初始化依赖注入系统并加载所有模块
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: WinstonModule.createLogger() })
+  const app = await NestFactory.create<NestExpressApplication>(AppModule,
+    {
+      logger: WinstonModule.createLogger(),
+      //  snapshot: process.env.NODE_ENV !== 'production'
+    })
 
   // 配置 Helmet 中间件，用于设置 HTTP 头，增强应用的安全性
   app.use(helmet())

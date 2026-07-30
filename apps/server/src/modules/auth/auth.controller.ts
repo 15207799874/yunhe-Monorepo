@@ -11,6 +11,7 @@ export class AuthController {
   @Public()
   @Post('hostInfo')
   public getHostInfo(@Body() body: Object) {
+    debugger
     return { data: body };
   }
 
